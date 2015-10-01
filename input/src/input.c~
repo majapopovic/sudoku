@@ -44,7 +44,7 @@ scanf("%d",&entry->value);
 
 int isEntryValid(ENTRY* entry)
 {
-if (isIndexValid(entry) & isValueValid(entry))
+if (isindexValid(entry) & isvalueValid(entry))
 return 1;
 else return 0;
 }
@@ -55,7 +55,7 @@ return (((entry->x) - 1)*9 + (entry->y) - 1);
 }
 
 
-int isValueValid(ENTRY* entry)
+int isvalueValid(ENTRY* entry)
 {
 if (entry->value>0 & entry->value<10 )
 return 1;
@@ -63,7 +63,7 @@ else return 0;
 }
 
 
-int isIndexValid(ENTRY* entry)
+int isindexValid(ENTRY* entry)
 {
 int index=convertIndex(entry);
 if (index>=0 & index<=80 )

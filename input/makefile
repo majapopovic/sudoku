@@ -1,8 +1,14 @@
 CC=gcc
 
-all: input
+all: input tests build
 
-.PHONY: input
+.PHONY: input tests build
 
-gui:
+input:
 	$(CC) -c src/input.c -o ../build/input.o
+
+tests:
+	$(MAKE) -C tests all
+
+build:
+	$(MAKE) -C build all
