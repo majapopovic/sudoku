@@ -1,0 +1,9 @@
+#include "logic.h"
+
+
+int* generateSudoku(void) // here some smart algorithm should be used
+{
+int* sudoku;
+sudoku=(int*)calloc(81, sizeof(int));
+return sudoku;
+}
