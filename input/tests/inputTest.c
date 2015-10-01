@@ -15,7 +15,7 @@ TEST_GROUP_RUNNER(inputTest)
 	RUN_TEST_CASE (inputTest, TestconvertIndex);
 	RUN_TEST_CASE (inputTest, TestindexValid);
 	RUN_TEST_CASE (inputTest, TestvalueValid);
-	RUN_TEST_CASE (inputTest, TestentryValid);			
+	//RUN_TEST_CASE (inputTest, TestentryValid);			
 }
 
 TEST_SETUP(inputTest)
