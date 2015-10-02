@@ -21,7 +21,7 @@ TEST_GROUP_RUNNER(inputTest)
 TEST_SETUP(inputTest)
 {
 sudoku=createSudoku();
-entry=createEntry();
+entry=createEntry1();
 }
 
 TEST_TEAR_DOWN(inputTest)

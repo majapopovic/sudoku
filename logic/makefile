@@ -1,8 +1,14 @@
 CC=gcc
 
-all: logic
+all: logic tests build
 
-.PHONY: logic
+.PHONY: logic tests build
 
-gui:
+logic:
 	$(CC) -c src/logic.c -o ../build/logic.o
+
+tests:
+	$(MAKE) -C tests all
+
+build:
+	$(MAKE) -C build all

@@ -9,12 +9,12 @@ TEST_GROUP(inputTest);
 
 TEST_GROUP_RUNNER(inputTest)
 {
-	//RUN_TEST_CASE (inputTest, TestassignXCoordinate);	
-	//RUN_TEST_CASE (inputTest, TestassignYCoordinate);
-	//RUN_TEST_CASE (inputTest, TestassignValue);
+	RUN_TEST_CASE (inputTest, TestassignXCoordinate);	
+	RUN_TEST_CASE (inputTest, TestassignYCoordinate);
+	RUN_TEST_CASE (inputTest, TestassignValue);
 	RUN_TEST_CASE (inputTest, TestconvertIndex);
-	//RUN_TEST_CASE (inputTest, TestindexValid);
-	//RUN_TEST_CASE (inputTest, TestvalueValid);
+	RUN_TEST_CASE (inputTest, TestindexValid);
+	RUN_TEST_CASE (inputTest, TestvalueValid);
 	//RUN_TEST_CASE (inputTest, TestentryValid);			
 }
 
