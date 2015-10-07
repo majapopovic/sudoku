@@ -286,6 +286,10 @@ int main( int argc, char* args[] )
 	sudoku=copySudoku(original);
 	//draw Sudoku
 	drawSudoku();
+    
+
+    }
+
     //Update the screen
     if( SDL_Flip( screen ) == -1 )
     {

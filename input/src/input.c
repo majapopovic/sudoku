@@ -1,18 +1,18 @@
 #include "input.h"
 
-int* createSudoku(void)
+/*int* createSudoku(void)
 {
     return (int*)calloc(50,sizeof(int)); 
-    /**(sudoku+1)=5;
+    *(sudoku+1)=5;
     *(sudoku+7)=9;
     *(sudoku+9)=8;
     *(sudoku+16)=4;
     *(sudoku+21)=3;
     *(sudoku+56)=7;
     *(sudoku+67)=9;
-    *(sudoku+73)=6;*/
+    *(sudoku+73)=6;
 
-}
+}*/
 
 ENTRY* createEntry1(void)
 {

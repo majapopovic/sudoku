@@ -15,7 +15,8 @@ int value;
 
 void assignXCoordinate(ENTRY*);
 void assignYCoordinate(ENTRY*);
-int* createSudoku(void);
+void assignValue(ENTRY*);
+//int* createSudoku(void);
 ENTRY* createEntry1(void);
 ENTRY* createEntry2(int, int, int);
 int convertIndex(ENTRY*);

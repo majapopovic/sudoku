@@ -11,6 +11,7 @@ int isColumnfree (int*, ENTRY*);
 int isRowfree (int*, ENTRY*);
 int isBoxfree (int*, ENTRY*);
 void updateSudoku (int*, ENTRY*);
-
+int* copySudoku(int*);
+int* prohibitedIndices(int*);
 
 #endif

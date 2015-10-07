@@ -3,14 +3,14 @@
 int* createSudoku(void)
 {
     return (int*)calloc(50,sizeof(int)); 
-    /**(sudoku+1)=5;
+    *(sudoku+1)=5;
     *(sudoku+7)=9;
     *(sudoku+9)=8;
     *(sudoku+16)=4;
     *(sudoku+21)=3;
     *(sudoku+56)=7;
     *(sudoku+67)=9;
-    *(sudoku+73)=6;*/
+    *(sudoku+73)=6;
 
 }
 
@@ -81,10 +81,4 @@ int isIndexValid(ENTRY* entry)
 	else return 0;
 }
 
-void updateSudoku(int* sudoku, ENTRY* entry)  // OVO TREBA PREBACITI U LOGIKU!!!!
-{    
-	int index;
-	index=convertIndex(entry);
-	*(sudoku+index)=entry->value;
-}
 

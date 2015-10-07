@@ -14,8 +14,8 @@ gui:
 main:
 	$(MAKE) -C main all
 
-#build:
-#	$(MAKE) -C build all
+build:
+	$(MAKE) -C build all
 
 
 

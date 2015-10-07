@@ -1,4 +1,9 @@
 #include "logic.h"
+
+
+/*int* sudoku;
+int* original;*/
+
 int* generateSudoku(void)
 {
     int* sudoku=(int*)calloc(81,sizeof(int)); 
@@ -11,6 +16,28 @@ int* generateSudoku(void)
     *(sudoku+67)=9;
     *(sudoku+73)=6;
 	return sudoku;
+}
+
+int* copySudoku(int* inputSudoku)
+{
+    int* outputSudoku=(int*)calloc(81,sizeof(int));
+	int i;
+	for (i=0;i<=80;i++)
+	*(outputSudoku+i)=*(inputSudoku+i);
+	return outputSudoku;
+}
+
+int* prohibitedIndices(int* sudoku)
+{
+	int* indices=(int*)calloc(81,sizeof(int));
+	int i,j=0;
+	for (i=0;i<=80;i++)
+	{
+	if(*(sudoku+i)==0)
+	indices[j]=i;
+	j++;
+	}
+	return indices;
 }
 
 
