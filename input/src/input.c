@@ -1,37 +1,23 @@
 #include "input.h"
 
-/*int* createSudoku(void)
-{
-    return (int*)calloc(50,sizeof(int)); 
-    *(sudoku+1)=5;
-    *(sudoku+7)=9;
-    *(sudoku+9)=8;
-    *(sudoku+16)=4;
-    *(sudoku+21)=3;
-    *(sudoku+56)=7;
-    *(sudoku+67)=9;
-    *(sudoku+73)=6;
-
-}*/
-
-ENTRY* createEntry1(void)
+/*ENTRY* createEntry1(void)
 {
 	ENTRY* entry=(ENTRY*)malloc(sizeof(ENTRY));
 	assignXCoordinate(entry);
 	assignYCoordinate(entry);
 	assignValue(entry);
 	return entry;
-}
+}*/
 
 
-ENTRY* createEntry2(int a, int b, int c)
+/*ENTRY* createEntry2(int a, int b, int c)
 {
 	ENTRY* entry=(ENTRY*)malloc(sizeof(ENTRY));
 	entry->x=a;
 	entry->y=b;
 	entry->value=c;
 	return entry;
-}
+}*/
 
 void assignXCoordinate(ENTRY* entry)
 {    
@@ -61,7 +47,7 @@ int isEntryValid(ENTRY* entry)
 
 int convertIndex(ENTRY* entry)
 {
-	return (((entry->x) - 1)*9 + (entry->y) - 1);
+	return (((entry->y) - 1)*9 + (entry->x) - 1);
 }
 
 

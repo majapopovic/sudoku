@@ -5,13 +5,23 @@
 #include <inttypes.h>
 #include "../../input/src/input.h"
 
-int* generateSudoku (void);
+typedef struct pindices
+{
+int indices [81];
+int size;
+} PINDICES;
+
+int* generateSudoku (int);
+//void generateSudoku (int);
 int isEmpty (int*, ENTRY*);
 int isColumnfree (int*, ENTRY*);
 int isRowfree (int*, ENTRY*);
 int isBoxfree (int*, ENTRY*);
-void updateSudoku (int*, ENTRY*);
+void updateSudoku (ENTRY*, PINDICES*);
 int* copySudoku(int*);
-int* prohibitedIndices(int*);
+//void copySudoku(void);
+PINDICES* prohibitedIndicesf(int*);
+
+
 
 #endif

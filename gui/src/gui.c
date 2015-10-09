@@ -3,6 +3,8 @@ and may not be redistributed without written permission.*/
 
 //Include SDL functions and datatypes
 #include "gui.h"
+#include <time.h>
+
 
 
 //Screen attributes
@@ -12,7 +14,7 @@ const int SCREEN_BPP = 32;
 
 //Control Buttons Borders
 
-const int CONTROL_UPPER_BOUND = 522;
+const int CONTROL_UPPER_BOUND = 490;
 const int BOX_DIMENSION = 54;
 //const int CONTROL_DOWN = 202;
 const int CLEAR = 162;
@@ -23,14 +25,18 @@ const int NEW = 324;
 SDL_Surface* background = NULL;
 SDL_Surface* number = NULL;
 SDL_Surface* screen = NULL;
-//ENTRY* entry;
+SDL_Surface* yellow_box = NULL;
+ENTRY* entry;
+PINDICES* prohibitedIndices;
 
+bool doubleClick=false;
 SDL_Event event;
-
+int* sudoku;
+int* original;
 TTF_Font* font = NULL;
 SDL_Color textColor = {0 , 0,  0 };
-static int* sudoku;
-static int* original;
+bool quit;
+int value;
 
 SDL_Surface *load_image( char* filename )
 {
@@ -90,6 +96,14 @@ int* numberPosition(ENTRY* entry)
 	return position;
 }
 
+int* boxPosition(ENTRY* entry)
+{
+	int* position=malloc(2*sizeof(int));
+	position[0]=(entry->x-1)*52+3;
+	position[1]=(entry->y-1)*52+4;/// ovo nije dobro jer je slika losa, linija debela tri piksela+49 PORAVNANJE ZUTOG KVADRATA!!!!!!!
+	return position;
+}
+
 
 
 bool init()
@@ -128,7 +142,8 @@ bool init()
 bool load_files()
 {
     //Load the background image
-    background = load_image( "../../resources/sudoku_button.bmp" );
+    background = load_image("../../resources/sudoku_button.bmp");
+	yellow_box = load_image("../../resources/yellow_box.bmp");
 
     //Open the font
     font = TTF_OpenFont( "../../resources/mytype.ttf", 40 ); 
@@ -156,6 +171,7 @@ void clean_up()
     //Free the surfaces
     SDL_FreeSurface( background );
     SDL_FreeSurface( number );
+    SDL_FreeSurface( yellow_box );
 
     //Close the font that was used
     TTF_CloseFont( font );
@@ -173,42 +189,60 @@ void checkSudoku(void)
 	int i, j, index;
 	for (i=1;i<10;i++)
 	{
-		for (j=1;i<10;i++)
+		for (j=1;j<10;j++)
 		{
 			entry->x=i;
 			entry->y=j;
 			index=convertIndex(entry);
 			entry->value=*(sudoku+index);
-			if (!(isColumnfree(sudoku, entry) && isRowfree(sudoku, entry) && isBoxfree(sudoku, entry)))
-				printf("Something is wrong\n");
+			if (!isEmpty(sudoku, entry))
+			{	
+				if (!(isBoxfree(sudoku, entry) && isRowfree(sudoku, entry) && isColumnfree(sudoku, entry)))
+					{ 
+						printf("Nije OK!\n");
+						return;
+					}
+			}		
 		}
 	}
 	printf("Everything is OK\n");
-//printf("Check Sudoku\n");
+	free(entry);
+	//printf("Check Sudoku\n");
 }
 
 	
-void newSudoku(void) // OVA FUNKCIJA MI NI NE TREBA, MOZDA SAMO ZBOG POINTERA NA FUNKCIJU jer je funkcija u drugom .c fajlu?! kako to realizovati  
-{
-	sudoku=generateSudoku();
-	//printf("New Sudoku\n");
+void newSudoku(void) 
+{   
+    int i;
+    int number=rand()%3;
+    free(original);
+    free(sudoku);
+    free(prohibitedIndices);
+	original=generateSudoku(number);
+	sudoku=copySudoku(original);
+    prohibitedIndices=prohibitedIndicesf(original);	
+
+	drawSudoku();
 }
 
 
 
 void clearSudoku(void)
-{
+{   
+    int i;
+    free(sudoku);
 	sudoku=copySudoku(original);
-	//printf("Clear Sudoku\n");
+
+	drawSudoku();
 }
 
 
-void handleButtonEvent()
+void handleButtonEvent(ENTRY* entry)
 {
-	int x,y;
-	void (*fptr[3])(void) = {&checkSudoku, &clearSudoku, &newSudoku };
-	if( event.type == SDL_MOUSEBUTTONDOWN ) // if the mousebutton was pressed
-	{
+	int x,y,i,j;
+	int* position;
+	void (*fptr[3])(void) = {&checkSudoku, &newSudoku, &clearSudoku  };
+
         //If the left mouse button was pressed
         if( event.button.button == SDL_BUTTON_LEFT )
         {
@@ -229,18 +263,66 @@ void handleButtonEvent()
 						fptr[2]();
 				}
 			}
+			else
+			{
+				entry->x=x/54+1;
+				entry->y=y/54+1;
+				position=boxPosition(entry);
+				for (i=0;i<prohibitedIndices->size;i++)
+					{
+						if (prohibitedIndices->indices[i]==convertIndex(entry))
+						{
+							free(position);							
+							return;
+						}
+					}
+                drawSudoku();
+				apply_surface(position[0],position[1], yellow_box, screen, NULL );
+				SDL_Flip( screen );
+			}
 		}
+free(position);	
+return;
+}
+
+
+
+int handleInputNumber(void)
+{
+	int input = event.key.keysym.sym - '0';
+	if(!(input>0 && input<10))
+		input=0;
+	return input;
+}
+        
+
+void handleEvents(void)
+
+{
+	if ( event.type == SDL_MOUSEBUTTONUP )
+	{
+				handleButtonEvent(entry);
+
+}
+	if( event.type == SDL_KEYDOWN )
+	{
+		entry->value=handleInputNumber();
+		updateSudoku(entry,prohibitedIndices);
+		drawSudoku();
 	}
+	if( event.type == SDL_QUIT )
+        {
+			quit = true;
+		}
 }
 
 
 void drawSudoku(void)
 {
+	ENTRY* entry=malloc(sizeof(ENTRY));	
 	int i,j,value,index;
-	//SDL_Surface* number=NULL;
 	char a[2];
 	int* position;
-	ENTRY* entry=malloc(sizeof(ENTRY));
 	apply_surface(0,0, background, screen, NULL );	
 	for (i=1;i<10;i++)
 		{
@@ -250,7 +332,6 @@ void drawSudoku(void)
 				entry->y=j;
 				index=convertIndex(entry);
 				entry->value=*(sudoku+index);
-				//itoa(entry->value, a, 10);
 				sprintf(a,"%d",entry->value);
 				if (entry->value!=0)
 				{ 
@@ -262,59 +343,47 @@ void drawSudoku(void)
 				}
 			}			
 		}
+	SDL_Flip( screen );
+free(entry);
+free(position);
 }
 
-
-
-				
+			
 int main( int argc, char* args[] )
 {
-    //Quit flag
-    bool quit = false;
-    //Initialize
+	int i, table; 
+	entry=(ENTRY*)malloc(sizeof(ENTRY)); 
+    quit = false;
     if( init() == false )
-    {
         return 1;
-    }
-
-    //Load the files
     if( load_files() == false )
-    {
         return 1;
-    }
-	original=generateSudoku();
-	sudoku=copySudoku(original);
-	//draw Sudoku
+    srand(time(NULL));
+
+    table=rand()%3;
+    original=generateSudoku(table);	
+    sudoku=copySudoku(original);
+	prohibitedIndices=prohibitedIndicesf(original);	
 	drawSudoku();
     //Update the screen
     if( SDL_Flip( screen ) == -1 )
-    {
         return 1;
-    }
-
-    //While the user hasn't quit
     while( quit == false )
     {
-        //While there's events to handle
         while( SDL_PollEvent( &event ) )
-        {
-			handleButtonEvent();
-			drawSudoku();
-            //If the user has Xed out the window
-            if( event.type == SDL_QUIT )
-            {
-                //Quit the program
-                quit = true;
-            }
-        }
+		handleEvents();
     }
 
     //Free surfaces and font then quit SDL_ttf and SDL
     clean_up();
-
-
+	free(original);
+	free(sudoku);
+	free(entry);
+	free(prohibitedIndices);
     return 0;
 }
+
+
 
 
 
